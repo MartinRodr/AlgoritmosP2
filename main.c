@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include <unistd.h>
 #include <math.h>
 #include <sys/time.h>
+#include <stdbool.h>
 
 /*
  * Ali Abu-afash Nayef
@@ -30,42 +30,96 @@ void aleatorio(int v[], int n) {
 	/* se generan números pseudoaleatorio entre -n y +n */
 }
 
-int hibbard(int v[], n){
-	int m = 0;
-	for (int k = 0; k < n; k++){
-		int h = (int)pow(2, k + 1) - 1;
-		if (h > n) break;
-		v[m++] = h;
+bool ordenado(int v[], int n){
+	for (int i = 1; i < n; i++){
+		if (v[i - 1] > v[i]) { return false; }
 	}
-	return m;
+	return true;
 }
 
-int knuth(int v[], int n){
-	for (int k = 0; k < n; k++){
-		v[k] = (int)(pow(3, k + 1) - 1) / 2;
+int *hibbard(int n, int *m){
+	int k = 1, cnt = 0;
+	while ((int)pow(2, k) - 1 <= n){
+		cnt++;
+		k++;
 	}
+	if (cnt == 0) { *m = 0; return NULL; }
+	int *incr = malloc(cnt * sizeof(int));
+	if (!incr) { perror("malloc"); exit(1); }
+	*m = cnt;
+	for (int i = 0; i < cnt; i++){
+		incr[i] = (int)pow(2, cnt - i) - 1;
+	}
+	return incr;
 }
 
-int sedgewick(int v[]) {
-	v[0] = 1;
-	for (int k = 1; k < n; k++){
-		v[k] = (int)pow(4, k) + (3 * pow(2, k - 1)) + 1;
+int *knuth(int n, int *m){
+	int k = 1, cnt = 0;
+	while (((int)pow(3, k) - 1) / 2 <= n) {
+		cnt++;
+		k++;
 	}
+	if (cnt == 0) { *m = 0; return NULL; }
+	int *incr = malloc(cnt * sizeof(int));
+	if (!incr) { perror("malloc"); exit(1); }
+	*m = cnt;
+	for (int i = 0; i < cnt; i++) {
+		incr[i] = ((int)pow(3, cnt - i) - 1) / 2;
+	}
+	return incr;
+}
+ /*
+ * REVISAR SEDGEWICK NO FUNCIONA
+ *
+ */
+int *sedgewick(int n, int *m) {
+	int k = 1, cnt = 0;
+	while ((int)(pow(4, k) + (3 * pow(2, k - 1)) + 1) <= n) {
+		cnt++;
+		k++;
+	}
+	if (cnt == 0) {
+        *m = 0; return NULL;
+    }
+    int *incr = malloc(cnt * sizeof(int));
+    if (!incr) { perror("malloc"); exit(1); }
+    *m = cnt;
+    for (int i = 0; i < cnt; i++) {
+    	if (i == cnt - 1) { incr[i] = 1; }
+    	else{
+    		incr[i] = (int)(pow(4, cnt - i) + (3 * pow(2, cnt - i - 1)) + 1);
+    	}
+	}
+    return incr;
 }
 
-int ciura(int v[], int n) {
+int *ciura(int n, int *m) {
 	int ciura[] = {1, 4, 10, 23, 57, 132, 301, 701, 1750};
 	int ciura_long = sizeof(ciura) / sizeof(ciura[0]);
-	int m = 0;
-	for (int k = 0; k < ciura_long && ciura[k] <= n; k++){
-		v[m++] = ciura[k];
+	int last = 1, cnt = 0;
+	while ((cnt < ciura_long && ciura[cnt] <= n)) {
+		last = ciura[cnt++];
+		//cnt++;
 	}
-	while(v[m - 1] < n){
-		int sig = (int)(v[m - 1] * 2.25);
-		if (sig > n) break;
-		v[m++] = sig;
+	while (last < n){
+		int next = (int)round(last * 2.25);
+		if (next > n) break;
+		last = next;
+		cnt++;
 	}
-	return m;
+	if (cnt == 0) { *m = 0; return NULL; }
+	int *incr = malloc(cnt * sizeof(int));
+    if (!incr) { perror("malloc"); exit(1); }
+    *m = cnt;
+	for (int i = 0; i < ciura_long && ciura[i] <= n; i++){
+		incr[cnt - i - 1] = ciura[i];
+	}
+	last = (cnt > 0) ? incr[cnt-1] : 1;
+    for (int j = ciura_long; j < cnt; j++) {
+        last = (int)round(last * 2.25);
+        incr[cnt - j - 1] = last;
+    }
+	return incr;	
 }
 
 void ord_ins(int v[], int n) {
@@ -84,10 +138,10 @@ void ord_shell(int v[], int n, int incr[], int m){
 	// incr es el vector de incrementos y el ultimo debe ser 1
 	for (int k = 0; k < m; k++){
 		int h = incr[k];
-		for (int i = h + 1; i < n; i++) {
+		for (int i = h; i < n; i++) {
 			int x = v[i];
 			int j = i;
-			while (j > h && v[j - h] > x){
+			while (j >= h && v[j - h] > x){
 				v[j] = v[j - h];
 				j -= h;
 			}
@@ -95,118 +149,6 @@ void ord_shell(int v[], int n, int incr[], int m){
 		}
 	}
 }
-
-
-/*void contarTiempoAlg1(int n, int k, int m, int exp, double confianza){
-	printf("Algoritmo 1:\n");
-	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / n^1.8", "t (n) / n^2", "t (n) / n^2.2");
-	double cte = 0;
-	for (int i = 0; i < m; i++) {
-		int conf = 0;
-		int *v = malloc(n * sizeof(int));
-		if (!v){
-			perror("malloc");
-			exit(EXIT_FAILURE);
-		}
-		inicializar_vector(v, n);
-		double ta = microsegundos();
-		suma1(v, n);
-		double tb = microsegundos();
-		double t = tb - ta;
-
-		if (t < confianza){
-			ta = microsegundos();
-			for (int i = 0; i < k; i++){
-				inicializar_vector(v, n);
-				suma1(v, n);
-			}
-			tb = microsegundos();
-			double t1 = tb - ta;
-			ta = microsegundos();
-			for (int j = 0; j < k; j++){
-				inicializar_vector(v, n);
-			}
-			tb = microsegundos();
-			double t2 = tb - ta;
-			t = (t1 - t2) / k;
-			conf = 1;
-		}
-		if (conf == 1){
-			printf("(*)");
-			printf("%7d", n);
-
-		} else {
-			printf("%10d", n);
-		}
-		printf("%18lf", t);
-		printf("%18lf", t / pow((double)n, 1.8));
-		printf("%18lf", t / pow((double)n, 2));
-		cte += t / pow((double)n, 2);
-		printf("%18.7lf", t / pow((double)n, 2.2));
-		printf("\n");
-		free(v);
-		n *=exp;
-	}
-	cte /= (double)m;
-	printf("Cte = %lf\n", cte);
-}
-
-void contarTiempoAlg2(int n, int k, int m, int exp, double confianza){
-	printf("Algoritmo 2:\n");
-	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / n^0.8", "t (n) / n", "t (n) / n*log(n)");
-	double cte = 0;
-	for (int i = 0; i < m; i++) {
-		int conf = 0;
-		int *v = malloc(n * sizeof(int));
-		if (!v){
-			perror("malloc");
-			exit(EXIT_FAILURE);
-		}
-		inicializar_vector(v, n);
-		double ta = microsegundos();
-		suma2(v, n);
-		double tb = microsegundos();
-		double t = tb - ta;
-
-		if (t < confianza){
-			conf = 1;
-			ta = microsegundos();
-			for (int i = 0; i < k; i++){
-				inicializar_vector(v, n);
-				suma2(v, n);
-			}
-			tb = microsegundos();
-			double t1 = tb - ta;
-			ta = microsegundos();
-			for (int j = 0; j < k; j++){
-				inicializar_vector(v, n);
-			}
-			tb = microsegundos();
-			double t2 = tb - ta;
-			t = (t1 - t2) / k;
-		}
-		if (conf == 1){
-			printf("(*)");
-			printf("%7d", n);
-
-		} else {
-			printf("%10d", n);
-		}
-		printf("%18lf", t);
-		printf("%18lf", t / pow((double)n, 0.8));
-		printf("%18lf", t / (double)n);
-		cte += t / (double)n;
-		printf("%18.7lf", t / ((double)n * log(n)));
-		printf("\n");
-		free(v);
-		n *=exp;
-	}
-	cte /= (double)m;
-	printf("Cte = %lf\n", cte);
-}
-*/
 
 void test_ins(){
 	int n = 15;
@@ -219,26 +161,93 @@ void test_ins(){
 	printf("\n");
 }
 void test_shell(){
-	int n = 15, m = 5;
-	int v[n], incr[m];
+	int n = 15, m;
+	int v[n], *incr;
 	aleatorio(v, n);
-	ciura(incr, m);
-	ord_shell(v, n, incr, m);
+	if (!ordenado(v, n)){
+		incr = ciura(n, &m);
+		ord_shell(v, n, incr, m);
+	}
+	for (int i = 0; i < n; i++){
+			printf("%d  ", v[i]);
+	}
+	printf("\n ciura: ");
+	for (int i = 0; i < m; i++){
+		printf("%d  ", incr[i]);		
+	}
+	printf("\n");
+	free(incr);
+}
+
+void p1(){
+	int n = 15, m;
+	int v[n], *incr;
+	aleatorio(v, n);
+	if (!ordenado(v, n)){
+		incr = hibbard(n, &m);
+		ord_shell(v, n, incr, m);
+	}
 	for (int i = 0; i < n; i++){
 		printf("%d  ", v[i]);
 
 	}
-	printf("\n");
+	printf("\n hibbard: ");
 	for (int i = 0; i < m; i++){
 		printf("%d  ", incr[i]);
 	
 	}
 	printf("\n");
+	free(incr);
+}
+
+void p2(){
+	int n = 15, m;
+	int v[n], *incr;
+	aleatorio(v, n);
+	if (!ordenado(v, n)){
+		incr = sedgewick(n, &m);
+		ord_shell(v, n, incr, m);
+	}
+	for (int i = 0; i < n; i++){
+		printf("%d  ", v[i]);
+
+	}
+	printf("\n hawd2: ");
+	for (int i = 0; i < m; i++){
+		printf("%d  ", incr[i]);
+	
+	}
+	printf("\n");
+	free(incr);
+}
+
+void p3(){
+	int n = 15, m;
+	int v[n], *incr;
+	aleatorio(v, n);
+	if (!ordenado(v, n)){
+		incr = knuth(n, &m);
+		ord_shell(v, n, incr, m);
+	}
+	for (int i = 0; i < n; i++){
+		printf("%d  ", v[i]);
+
+	}
+	printf("\n gege3: ");
+	for (int i = 0; i < m; i++){
+		printf("%d  ", incr[i]);
+	
+	}
+	printf("\n");
+	free(incr);
 }
 
 int main(void){
 	inicializar_semilla();
 	test_ins();
 	test_shell();
+	p1();
+	p2();
+	p3();
 	return 0;
 }
