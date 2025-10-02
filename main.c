@@ -37,6 +37,14 @@ bool ordenado(int v[], int n){
 	return true;
 }
 
+void inicializar_ascendente(int v[], int n) {
+	for (int i = 0; i < n; i++) v[i] = i;
+}
+
+void inicializar_descendente(int v[], int n) {
+	for (int i = 0; i < n; i++) v[i] = n - i;
+}
+
 int *hibbard(int n, int *m){
 	int k = 1, cnt = 0, *incr;
 	while ((int)pow(2, k) - 1 <= n){
