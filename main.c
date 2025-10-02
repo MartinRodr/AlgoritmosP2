@@ -68,10 +68,7 @@ int *knuth(int n, int *m){
 	}
 	return incr;
 }
- /*
- * REVISAR SEDGEWICK NO FUNCIONA
- *
- */
+
 int *sedgewick(int n, int *m) {
 	int k = 1, cnt = 0;
 	while ((int)(pow(4, k) + (3 * pow(2, k - 1)) + 1) <= n) {
@@ -84,23 +81,25 @@ int *sedgewick(int n, int *m) {
     int *incr = malloc(cnt * sizeof(int));
     if (!incr) { perror("malloc"); exit(1); }
     *m = cnt;
-    printf("\nddddddd %d\n", cnt);
-    for (int i = 0; i < cnt; i++) {
-    	if (i == cnt - 1) { incr[i] = 1; }
-    	else
-    		incr[i] = (int)(pow(4, cnt - i) + (3 * pow(2, cnt - i - 1)) + 1);
-	}
+    for (int i = 0; i < cnt; i++) 
+    	incr[i] = (int)(pow(4, cnt - i) + (3 * pow(2, cnt - i - 1)) + 1);
+    if (incr[cnt - 1] != 1){
+    	incr = realloc(incr, (cnt + 1) * sizeof(int));
+    	if(!incr){
+    		perror("realloc"); exit(1);
+    	}
+    	incr[cnt] = 1;
+    	*m = cnt + 1;
+    }
     return incr;
 }
 
 int *ciura(int n, int *m) {
 	int ciura[] = {1, 4, 10, 23, 57, 132, 301, 701, 1750};
-	int ciura_long = sizeof(ciura) / sizeof(ciura[0]);
+	int ciura_long = sizeof(ciura) / sizeof(ciura[0]); 
 	int last = 1, cnt = 0;
 	while ((cnt < ciura_long && ciura[cnt] <= n)) {
-		last = ciura[cnt++];
-		//cnt++;
-	}
+		last = ciura[cnt++]; }
 	while (last < n){
 		int next = (int)round(last * 2.25);
 		if (next > n) break;
@@ -160,6 +159,7 @@ void test_ins(){
 	}
 	printf("\n");
 }
+
 void test_shell(){
 	int n = 15, m;
 	int v[n], *incr;
