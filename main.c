@@ -38,13 +38,13 @@ bool ordenado(int v[], int n){
 }
 
 int *hibbard(int n, int *m){
-	int k = 1, cnt = 0;
+	int k = 1, cnt = 0, *incr;
 	while ((int)pow(2, k) - 1 <= n){
 		cnt++;
 		k++;
 	}
 	if (cnt == 0) { *m = 0; return NULL; }
-	int *incr = malloc(cnt * sizeof(int));
+	incr = malloc(cnt * sizeof(int));
 	if (!incr) { perror("malloc"); exit(1); }
 	*m = cnt;
 	for (int i = 0; i < cnt; i++){
@@ -54,13 +54,13 @@ int *hibbard(int n, int *m){
 }
 
 int *knuth(int n, int *m){
-	int k = 1, cnt = 0;
+	int k = 1, cnt = 0, *incr;
 	while (((int)pow(3, k) - 1) / 2 <= n) {
 		cnt++;
 		k++;
 	}
 	if (cnt == 0) { *m = 0; return NULL; }
-	int *incr = malloc(cnt * sizeof(int));
+	incr = malloc(cnt * sizeof(int));
 	if (!incr) { perror("malloc"); exit(1); }
 	*m = cnt;
 	for (int i = 0; i < cnt; i++) {
@@ -70,7 +70,7 @@ int *knuth(int n, int *m){
 }
 
 int *sedgewick(int n, int *m) {
-	int k = 1, cnt = 0;
+	int k = 1, cnt = 0, *incr;
 	while ((int)(pow(4, k) + (3 * pow(2, k - 1)) + 1) <= n) {
 		cnt++;
 		k++;
@@ -78,7 +78,7 @@ int *sedgewick(int n, int *m) {
 	if (cnt == 0) {
         *m = 0; return NULL;
     }
-    int *incr = malloc(cnt * sizeof(int));
+    incr = malloc(cnt * sizeof(int));
     if (!incr) { perror("malloc"); exit(1); }
     *m = cnt;
     for (int i = 0; i < cnt; i++) 
@@ -97,17 +97,17 @@ int *sedgewick(int n, int *m) {
 int *ciura(int n, int *m) {
 	int ciura[] = {1, 4, 10, 23, 57, 132, 301, 701, 1750};
 	int ciura_long = sizeof(ciura) / sizeof(ciura[0]); 
-	int last = 1, cnt = 0;
+	int last = 1, cnt = 0, next = 0, *incr;
 	while ((cnt < ciura_long && ciura[cnt] <= n)) {
 		last = ciura[cnt++]; }
 	while (last < n){
-		int next = (int)round(last * 2.25);
+		next = (int)round(last * 2.25);
 		if (next > n) break;
 		last = next;
 		cnt++;
 	}
 	if (cnt == 0) { *m = 0; return NULL; }
-	int *incr = malloc(cnt * sizeof(int));
+	incr = malloc(cnt * sizeof(int));
     if (!incr) { perror("malloc"); exit(1); }
     *m = cnt;
 	for (int i = 0; i < ciura_long && ciura[i] <= n; i++){
@@ -179,6 +179,63 @@ void test_shell(){
 	free(incr);
 }
 
+void contarTiempoIns(int n, int k, int m, int exp, double confianza){
+	int conf;
+	int *v;
+	double ta, tb, t, t1, t2, cte;
+	printf("Algoritmo Insercion:\n");
+	printf("%10s%18s%18s%18s%18s\n", 
+		"n", "t (n)", "t (n) / n^1.8", "t (n) / n^2", "t (n) / n^2.2");
+	for (int i = 0; i < m; i++) {
+		conf = 0;
+		v = malloc(n * sizeof(int));
+		if (!v){
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+		aleatorio(v, n);
+		ta = microsegundos();
+		ord_ins(v, n);
+		tb = microsegundos();
+		t = tb - ta;
+
+		if (t < confianza){
+			ta = microsegundos();
+			for (int i = 0; i < k; i++){
+				aleatorio(v, n);
+				ord_ins(v, n);
+			}
+			tb = microsegundos();
+			t1 = tb - ta;
+			ta = microsegundos();
+			for (int j = 0; j < k; j++){
+				aleatorio(v, n);
+			}
+			tb = microsegundos();
+			t2 = tb - ta;
+			t = (t1 - t2) / k;
+			conf = 1;
+		}
+		if (conf == 1){
+			printf("(*)");
+			printf("%7d", n);
+
+		} else {
+			printf("%10d", n);
+		}
+		printf("%18lf", t);
+		printf("%18lf", t / pow((double)n, 1.8));
+		printf("%18lf", t / pow((double)n, 2));
+		cte += t / pow((double)n, 2);
+		printf("%18.7lf", t / pow((double)n, 2.2));
+		printf("\n");
+		free(v);
+		n *=exp;
+	}
+	cte /= (double)m;
+	printf("Cte = %lf\n", cte);
+}
+
 void p1(){
 	int n = 15, m;
 	int v[n], *incr;
@@ -243,7 +300,15 @@ void p3(){
 }
 
 int main(void){
+	int k = 1000, n1 = 500, m1 = 7, exp = 2;
+	// int n2 = 500, m2 = 10;
+	double confianza = 500.00;
 	inicializar_semilla();
+	contarTiempoIns(n1, k, m1, exp, confianza);
+
+
+
+
 	test_ins();
 	test_shell();
 	p1();
