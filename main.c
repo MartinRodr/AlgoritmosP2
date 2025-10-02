@@ -30,13 +30,6 @@ void aleatorio(int v[], int n) {
 	/* se generan números pseudoaleatorio entre -n y +n */
 }
 
-bool ordenado(int v[], int n){
-	for (int i = 1; i < n; i++){
-		if (v[i - 1] > v[i]) { return false; }
-	}
-	return true;
-}
-
 void inicializar_ascendente(int v[], int n) {
 	for (int i = 0; i < n; i++) v[i] = i;
 }
@@ -45,7 +38,12 @@ void inicializar_descendente(int v[], int n) {
 	for (int i = 0; i < n; i++) v[i] = n - i;
 }
 
-
+bool ordenado(int v[], int n){
+	for (int i = 1; i < n; i++){
+		if (v[i - 1] > v[i]) { return false; }
+	}
+	return true;
+}
 
 int *hibbard(int n, int *m){
 	int k = 1, cnt = 0, *incr;
@@ -189,11 +187,120 @@ void test_shell(){
 	free(incr);
 }
 
-void contarTiempoIns(int n, int k, int m, int exp, double confianza){
-	int conf;
-	int *v;
+void contarTiempoInsAscend(int n, int k, int m, int exp, double confianza){
+	int conf, *v;
 	double ta, tb, t, t1, t2, cte;
-	printf("Algoritmo Insercion:\n");
+	printf("Algoritmo Insercion: vector ascendente\n");
+	printf("%10s%18s%18s%18s%18s\n", 
+		"n", "t (n)", "t (n) / n^1.8", "t (n) / n^2", "t (n) / n^2.2");
+	for (int i = 0; i < m; i++) {
+		conf = 0;
+		v = malloc(n * sizeof(int));
+		if (!v){
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+		inicializar_ascendente(v, n);
+		ta = microsegundos();
+		ord_ins(v, n);
+		tb = microsegundos();
+		t = tb - ta;
+		if (t < confianza){
+			ta = microsegundos();
+			for (int i = 0; i < k; i++){
+				inicializar_ascendente(v, n);
+				ord_ins(v, n);
+			}
+			tb = microsegundos();
+			t1 = tb - ta;
+			ta = microsegundos();
+			for (int j = 0; j < k; j++){
+				inicializar_ascendente(v, n);
+			}
+			tb = microsegundos();
+			t2 = tb - ta;
+			t = (t1 - t2) / k;
+			conf = 1;
+		}
+		if (conf == 1){
+			printf("(*)");
+			printf("%7d", n);
+
+		} else {
+			printf("%10d", n);
+		}
+		printf("%18lf", t);
+		printf("%18lf", t / pow((double)n, 1.8));
+		printf("%18lf", t / pow((double)n, 2));
+		cte += t / pow((double)n, 2);
+		printf("%18.7lf", t / pow((double)n, 2.2));
+		printf("\n");
+		free(v);
+		n *=exp;
+	}
+	cte /= (double)m;
+	printf("Cte = %lf\n\n", cte);
+}
+
+void contarTiempoInsDescend(int n, int k, int m, int exp, double confianza){
+	int conf, *v;
+	double ta, tb, t, t1, t2, cte;
+	printf("Algoritmo Insercion: vector descendente\n");
+	printf("%10s%18s%18s%18s%18s\n", 
+		"n", "t (n)", "t (n) / n^1.8", "t (n) / n^2", "t (n) / n^2.2");
+	for (int i = 0; i < m; i++) {
+		conf = 0;
+		v = malloc(n * sizeof(int));
+		if (!v){
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+		inicializar_descendente(v, n);
+		ta = microsegundos();
+		ord_ins(v, n);
+		tb = microsegundos();
+		t = tb - ta;
+		if (t < confianza){
+			ta = microsegundos();
+			for (int i = 0; i < k; i++){
+				inicializar_descendente(v, n);
+				ord_ins(v, n);
+			}
+			tb = microsegundos();
+			t1 = tb - ta;
+			ta = microsegundos();
+			for (int j = 0; j < k; j++){
+				inicializar_descendente(v, n);
+			}
+			tb = microsegundos();
+			t2 = tb - ta;
+			t = (t1 - t2) / k;
+			conf = 1;
+		}
+		if (conf == 1){
+			printf("(*)");
+			printf("%7d", n);
+
+		} else {
+			printf("%10d", n);
+		}
+		printf("%18lf", t);
+		printf("%18lf", t / pow((double)n, 1.8));
+		printf("%18lf", t / pow((double)n, 2));
+		cte += t / pow((double)n, 2);
+		printf("%18.7lf", t / pow((double)n, 2.2));
+		printf("\n");
+		free(v);
+		n *=exp;
+	}
+	cte /= (double)m;
+	printf("Cte = %lf\n\n", cte);
+}
+
+void contarTiempoInsDesord(int n, int k, int m, int exp, double confianza){
+	int conf, *v;
+	double ta, tb, t, t1, t2, cte;
+	printf("Algoritmo Insercion: vector desordenado\n");
 	printf("%10s%18s%18s%18s%18s\n", 
 		"n", "t (n)", "t (n) / n^1.8", "t (n) / n^2", "t (n) / n^2.2");
 	for (int i = 0; i < m; i++) {
@@ -208,7 +315,6 @@ void contarTiempoIns(int n, int k, int m, int exp, double confianza){
 		ord_ins(v, n);
 		tb = microsegundos();
 		t = tb - ta;
-
 		if (t < confianza){
 			ta = microsegundos();
 			for (int i = 0; i < k; i++){
@@ -243,7 +349,231 @@ void contarTiempoIns(int n, int k, int m, int exp, double confianza){
 		n *=exp;
 	}
 	cte /= (double)m;
-	printf("Cte = %lf\n", cte);
+	printf("Cte = %lf\n\n", cte);
+}
+
+void contarTiempoShellHibb(int n, int k, int m, int exp, double confianza){
+	int conf, *v, *incr, mm;
+	double ta, tb, t, t1, t2, cte;
+	printf("Algoritmo Shell: Hibbard\n");
+	printf("%10s%18s%18s%18s%18s\n", 
+		"n", "t (n)", "t (n) / n^1.4", "t (n) / n^1.5", "t (n) / n^1.6");
+	for (int i = 0; i < m; i++) {
+		conf = 0;
+		v = malloc(n * sizeof(int));
+		if (!v){
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+		incr = hibbard(n, &mm);
+		aleatorio(v, n);
+		ta = microsegundos();
+		ord_shell(v, n, incr, mm);
+		tb = microsegundos();
+		t = tb - ta;
+		if (t < confianza){
+			ta = microsegundos();
+			for (int i = 0; i < k; i++){
+				aleatorio(v, n);
+				ord_shell(v, n, incr, mm);
+			}
+			tb = microsegundos();
+			t1 = tb - ta;
+			ta = microsegundos();
+			for (int j = 0; j < k; j++){
+				aleatorio(v, n);
+			}
+			tb = microsegundos();
+			t2 = tb - ta;
+			t = (t1 - t2) / k;
+			conf = 1;
+		}
+		if (conf == 1){
+			printf("(*)");
+			printf("%7d", n);
+
+		} else {
+			printf("%10d", n);
+		}
+		printf("%18lf", t);
+		printf("%18lf", t / pow((double)n, 1.4));
+		printf("%18lf", t / pow((double)n, 1.5));
+		cte += t / pow((double)n, 1.5);
+		printf("%18.7lf", t / pow((double)n, 1.6));
+		printf("\n");
+		free(v);
+		n *=exp;
+	}
+	cte /= (double)m;
+	printf("Cte = %lf\n\n", cte);
+}
+
+void contarTiempoShellKnuth(int n, int k, int m, int exp, double confianza){
+	int conf, *v, *incr, mm;
+	double ta, tb, t, t1, t2, cte;
+	printf("Algoritmo Shell: Knuth\n");
+	printf("%10s%18s%18s%18s%18s\n", 
+		"n", "t (n)", "t (n) / n^1.4", "t (n) / n^1.5", "t (n) / n^1.6");
+	for (int i = 0; i < m; i++) {
+		conf = 0;
+		v = malloc(n * sizeof(int));
+		if (!v){
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+		incr = knuth(n, &mm);
+		aleatorio(v, n);
+		ta = microsegundos();
+		ord_shell(v, n, incr, mm);
+		tb = microsegundos();
+		t = tb - ta;
+		if (t < confianza){
+			ta = microsegundos();
+			for (int i = 0; i < k; i++){
+				aleatorio(v, n);
+				ord_shell(v, n, incr, mm);
+			}
+			tb = microsegundos();
+			t1 = tb - ta;
+			ta = microsegundos();
+			for (int j = 0; j < k; j++){
+				aleatorio(v, n);
+			}
+			tb = microsegundos();
+			t2 = tb - ta;
+			t = (t1 - t2) / k;
+			conf = 1;
+		}
+		if (conf == 1){
+			printf("(*)");
+			printf("%7d", n);
+
+		} else {
+			printf("%10d", n);
+		}
+		printf("%18lf", t);
+		printf("%18lf", t / pow((double)n, 1.4));
+		printf("%18lf", t / pow((double)n, 1.5));
+		cte += t / pow((double)n, 1.5);
+		printf("%18.7lf", t / pow((double)n, 1.6));
+		printf("\n");
+		free(v);
+		n *=exp;
+	}
+	cte /= (double)m;
+	printf("Cte = %lf\n\n", cte);
+}
+
+void contarTiempoShellSedg(int n, int k, int m, int exp, double confianza){
+	int conf, *v, *incr, mm;
+	double ta, tb, t, t1, t2, cte;
+	printf("Algoritmo Shell: Sedgewick\n");
+	printf("%10s%18s%18s%18s%18s\n", 
+		"n", "t (n)", "t (n) / n * log(n)", "t (n) / n * log(n)^2", "t (n) / n^1.3");
+	for (int i = 0; i < m; i++) {
+		conf = 0;
+		v = malloc(n * sizeof(int));
+		if (!v){
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+		incr = sedgewick(n, &mm);
+		aleatorio(v, n);
+		ta = microsegundos();
+		ord_shell(v, n, incr, mm);
+		tb = microsegundos();
+		t = tb - ta;
+		if (t < confianza){
+			ta = microsegundos();
+			for (int i = 0; i < k; i++){
+				aleatorio(v, n);
+				ord_shell(v, n, incr, mm);
+			}
+			tb = microsegundos();
+			t1 = tb - ta;
+			ta = microsegundos();
+			for (int j = 0; j < k; j++){
+				aleatorio(v, n);
+			}
+			tb = microsegundos();
+			t2 = tb - ta;
+			t = (t1 - t2) / k;
+			conf = 1;
+		}
+		if (conf == 1){
+			printf("(*)");
+			printf("%7d", n);
+
+		} else {
+			printf("%10d", n);
+		}
+		printf("%18lf", t);
+		printf("%18lf", t / ((double)n * log(n)));
+		printf("%18lf", t / ((double)n * (pow(log(n), 2))));
+		cte += t / ((double)n * (pow(log(n), 2)));
+		printf("%18.7lf", t / pow((double)n, 1.3));
+		printf("\n");
+		free(v);
+		n *=exp;
+	}
+	cte /= (double)m;
+	printf("Cte = %lf\n\n", cte);
+}
+
+void contarTiempoShellCiura(int n, int k, int m, int exp, double confianza){
+	int conf, *v, *incr, mm;
+	double ta, tb, t, t1, t2, cte;
+	printf("Algoritmo Shell: Ciura\n");
+	printf("%10s%18s%18s%18s%18s\n", 
+		"n", "t (n)", "t (n) / n^1.2", "t (n) / n^1.25", "t (n) / n^1.3");
+	for (int i = 0; i < m; i++) {
+		conf = 0;
+		v = malloc(n * sizeof(int));
+		if (!v){
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+		incr = ciura(n, &mm);
+		aleatorio(v, n);
+		ta = microsegundos();
+		ord_shell(v, n, incr, mm);
+		tb = microsegundos();
+		t = tb - ta;
+		if (t < confianza){
+			ta = microsegundos();
+			for (int i = 0; i < k; i++){
+				aleatorio(v, n);
+				ord_shell(v, n, incr, mm);
+			}
+			tb = microsegundos();
+			t1 = tb - ta;
+			ta = microsegundos();
+			for (int j = 0; j < k; j++){
+				aleatorio(v, n);
+			}
+			tb = microsegundos();
+			t2 = tb - ta;
+			t = (t1 - t2) / k;
+			conf = 1;
+		}
+		if (conf == 1){
+			printf("(*)");
+			printf("%7d", n);
+
+		} else {
+			printf("%10d", n);
+		}
+		printf("%18lf", t);
+		printf("%18lf", t / pow((double)n, 1.2));
+		printf("%18lf", t / pow((double)n, 1.25));
+		cte += t / pow((double)n, 1.25);
+		printf("%18.7lf", t / pow((double)n, 1.3));
+		printf("\n");
+		free(v);
+		n *=exp;
+	}
+	cte /= (double)m;
+	printf("Cte = %lf\n\n", cte);
 }
 
 void p1(){
@@ -310,12 +640,17 @@ void p3(){
 }
 
 int main(void){
-	int k = 1000, n1 = 500, m1 = 7, exp = 2;
-	// int n2 = 500, m2 = 10;
+	int k = 1000, n = 500, m1 = 7, exp = 2; //m2 = 10;
 	double confianza = 500.00;
 	inicializar_semilla();
-	contarTiempoIns(n1, k, m1, exp, confianza);
+	contarTiempoInsAscend(n, k, m1, exp, confianza);
+	contarTiempoInsDescend(n, k, m1, exp, confianza);
+	contarTiempoInsDesord(n, k, m1, exp, confianza);
 
+	contarTiempoShellHibb(n, k, m1, exp, confianza);
+	contarTiempoShellKnuth(n, k, m1, exp, confianza);
+	contarTiempoShellSedg(n, k, m1, exp, confianza);
+	contarTiempoShellCiura(n, k, m1, exp, confianza);
 
 
 
