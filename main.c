@@ -84,11 +84,11 @@ int *sedgewick(int n, int *m) {
     int *incr = malloc(cnt * sizeof(int));
     if (!incr) { perror("malloc"); exit(1); }
     *m = cnt;
+    printf("\nddddddd %d\n", cnt);
     for (int i = 0; i < cnt; i++) {
     	if (i == cnt - 1) { incr[i] = 1; }
-    	else{
+    	else
     		incr[i] = (int)(pow(4, cnt - i) + (3 * pow(2, cnt - i - 1)) + 1);
-    	}
 	}
     return incr;
 }
@@ -212,7 +212,7 @@ void p2(){
 		printf("%d  ", v[i]);
 
 	}
-	printf("\n hawd2: ");
+	printf("\n sedgewick: ");
 	for (int i = 0; i < m; i++){
 		printf("%d  ", incr[i]);
 	
@@ -233,7 +233,7 @@ void p3(){
 		printf("%d  ", v[i]);
 
 	}
-	printf("\n gege3: ");
+	printf("\n knuth: ");
 	for (int i = 0; i < m; i++){
 		printf("%d  ", incr[i]);
 	
