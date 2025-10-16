@@ -160,7 +160,7 @@ void ord_shell(int v[], int n, int incr[], int m){
 void contarTiempoInsAscend(int n, int k, int m, int exp, double confianza){
 	int conf, *v;
 	double ta, tb, t, t1, t2, cte;
-	printf("Algoritmo Insercion: vector ascendente\n");
+	printf("Algoritmo Insercion: Vector Ascendente\n");
 	printf("%10s%18s%18s%18s%18s\n", 
 		"n", "t (n)", "t (n) / n^1.8", "t (n) / n^2", "t (n) / n^2.2");
 	for (int i = 0; i < m; i++) {
@@ -215,7 +215,7 @@ void contarTiempoInsAscend(int n, int k, int m, int exp, double confianza){
 void contarTiempoInsDescend(int n, int k, int m, int exp, double confianza){
 	int conf, *v;
 	double ta, tb, t, t1, t2, cte;
-	printf("Algoritmo Insercion: vector descendente\n");
+	printf("Algoritmo Insercion: Vector Descendente\n");
 	printf("%10s%18s%18s%18s%18s\n", 
 		"n", "t (n)", "t (n) / n^1.8", "t (n) / n^2", "t (n) / n^2.2");
 	for (int i = 0; i < m; i++) {
@@ -270,7 +270,7 @@ void contarTiempoInsDescend(int n, int k, int m, int exp, double confianza){
 void contarTiempoInsDesord(int n, int k, int m, int exp, double confianza){
 	int conf, *v;
 	double ta, tb, t, t1, t2, cte;
-	printf("Algoritmo Insercion: vector desordenado\n");
+	printf("Algoritmo Insercion: Vector Desordenado\n");
 	printf("%10s%18s%18s%18s%18s\n", 
 		"n", "t (n)", "t (n) / n^1.8", "t (n) / n^2", "t (n) / n^2.2");
 	for (int i = 0; i < m; i++) {
