@@ -396,7 +396,7 @@ void contarTiempoShellHibb(int n, int k, int m, int exp, double confianza){
 			printf("%10d", n);
 		}
 		printf("%18lf", t);
-		printf("%18lf", t / pow((double)n, 1.1)5);
+		printf("%18lf", t / pow((double)n, 1.2));
 		printf("%18lf", t / ((double)n * log(n)));
 		cte += t / pow((double)n, 1.5);
 		printf("%18.7lf", t / pow((double)n, 1.5));
