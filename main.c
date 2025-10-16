@@ -357,7 +357,7 @@ void contarTiempoShellHibb(int n, int k, int m, int exp, double confianza){
 	double ta, tb, t, t1, t2, cte;
 	printf("Algoritmo Shell: Hibbard\n");
 	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / n^1.4", "t (n) / n^1.5", "t (n) / n^1.6");
+		"n", "t (n)", "t (n) / n^1.2", "t (n) / n*log(n)", "t (n) / n^1.5");
 	for (int i = 0; i < m; i++) {
 		conf = 0;
 		v = malloc(n * sizeof(int));
@@ -396,10 +396,10 @@ void contarTiempoShellHibb(int n, int k, int m, int exp, double confianza){
 			printf("%10d", n);
 		}
 		printf("%18lf", t);
-		printf("%18lf", t / pow((double)n, 1.4));
-		printf("%18lf", t / pow((double)n, 1.5));
+		printf("%18lf", t / pow((double)n, 1.1)5);
+		printf("%18lf", t / ((double)n * log(n)));
 		cte += t / pow((double)n, 1.5);
-		printf("%18.7lf", t / pow((double)n, 1.6));
+		printf("%18.7lf", t / pow((double)n, 1.5));
 		printf("\n");
 		free(v);
 		n *=exp;
@@ -413,7 +413,7 @@ void contarTiempoShellKnuth(int n, int k, int m, int exp, double confianza){
 	double ta, tb, t, t1, t2, cte;
 	printf("Algoritmo Shell: Knuth\n");
 	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / n^1.4", "t (n) / n^1.5", "t (n) / n^1.6");
+		"n", "t (n)", "t (n) / n^1.52", "t (n) / n*log(n)", "t (n) / n^1.6");
 	for (int i = 0; i < m; i++) {
 		conf = 0;
 		v = malloc(n * sizeof(int));
@@ -452,8 +452,8 @@ void contarTiempoShellKnuth(int n, int k, int m, int exp, double confianza){
 			printf("%10d", n);
 		}
 		printf("%18lf", t);
-		printf("%18lf", t / pow((double)n, 1.4));
-		printf("%18lf", t / pow((double)n, 1.5));
+		printf("%18lf", t / pow((double)n, 1.52));
+		printf("%18lf", t / ((double)n * log(n)));
 		cte += t / pow((double)n, 1.5);
 		printf("%18.7lf", t / pow((double)n, 1.6));
 		printf("\n");
@@ -469,7 +469,7 @@ void contarTiempoShellSedg(int n, int k, int m, int exp, double confianza){
 	double ta, tb, t, t1, t2, cte;
 	printf("Algoritmo Shell: Sedgewick\n");
 	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / n * log(n)", "t (n) / n * log(n)^2", "t (n) / n^1.3");
+		"n", "t (n)", "t (n) / n^4/3", "t (n) / 1.35", "t (n) / n^1.4");
 	for (int i = 0; i < m; i++) {
 		conf = 0;
 		v = malloc(n * sizeof(int));
@@ -508,10 +508,10 @@ void contarTiempoShellSedg(int n, int k, int m, int exp, double confianza){
 			printf("%10d", n);
 		}
 		printf("%18lf", t);
-		printf("%18lf", t / ((double)n * log(n)));
-		printf("%18lf", t / ((double)n * (pow(log(n), 2))));
-		cte += t / ((double)n * (pow(log(n), 2)));
-		printf("%18.7lf", t / pow((double)n, 1.3));
+		printf("%18lf", t / (pow((double)n, 4/3)));
+		printf("%18lf", t / (pow((double)n, 1.35)));
+		cte += t / (pow((double)n, 4/3));
+		printf("%18.7lf", t / pow((double)n, 1.4));
 		printf("\n");
 		free(v);
 		n *=exp;
@@ -525,7 +525,7 @@ void contarTiempoShellCiura(int n, int k, int m, int exp, double confianza){
 	double ta, tb, t, t1, t2, cte;
 	printf("Algoritmo Shell: Ciura\n");
 	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / n^1.2", "t (n) / n^1.25", "t (n) / n^1.3");
+		"n", "t (n)", "t (n) / n^1.28", "t (n) / n*log(n)", "t (n) / n^1.32");
 	for (int i = 0; i < m; i++) {
 		conf = 0;
 		v = malloc(n * sizeof(int));
@@ -564,10 +564,10 @@ void contarTiempoShellCiura(int n, int k, int m, int exp, double confianza){
 			printf("%10d", n);
 		}
 		printf("%18lf", t);
-		printf("%18lf", t / pow((double)n, 1.2));
-		printf("%18lf", t / pow((double)n, 1.25));
+		printf("%18lf", t / pow((double)n, 1.28));
+		printf("%18lf", t / ((double)n * log(n)));
 		cte += t / pow((double)n, 1.25);
-		printf("%18.7lf", t / pow((double)n, 1.3));
+		printf("%18.7lf", t / pow((double)n, 1.32));
 		printf("\n");
 		free(v);
 		n *=exp;
@@ -647,7 +647,7 @@ int main(void){
 	contarTiempoInsDescend(n, k, m1, exp, confianza);
 	contarTiempoInsDesord(n, k, m1, exp, confianza);
 
-	contarTiempoShellHibb(n, k, m1, exp, confianza);
+	contarTiempoShellHibb(n, k, 10, exp, confianza);
 	contarTiempoShellKnuth(n, k, m1, exp, confianza);
 	contarTiempoShellSedg(n, k, m1, exp, confianza);
 	contarTiempoShellCiura(n, k, m1, exp, confianza);
