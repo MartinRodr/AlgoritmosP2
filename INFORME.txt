@@ -5,16 +5,22 @@ Martín Rodríguez Arévalo
 Alejandro Patiño Jaramillo
 
 Buscamos ordenar de menor a mayor un vector de n números enteros implementendo
-los algoritmos de ordenación por inserción y ordenación Shell y a su vez determinar los tiempos de ejecución de ambos algoritmos.
+los algoritmos de ordenación por inserción y ordenación Shell y a su vez determinar 
+los tiempos de ejecución de ambos algoritmos.
 Las tablas presentan al menos cinco valores de progresión geométrica de 2^ y
 sus respectivos tiempos de ejecución en microsegundos con al menos tres cifras
 significativas.
-Para el algoritmo de ordenación por inserción se ha ejecutado con un vector ordenado ascendentemente, otro descendentamente y otro totalmente desordenado.
+Para el algoritmo de ordenación por inserción se ha ejecutado con un vector ordenado 
+ascendentemente, otro descendentamente y otro totalmente desordenado.
 Después para el de ordenación Shell se ha ejecutado utilizando la secuencia de
 incrementos de Hibbard, Knuth, Sedgewick y Ciura.
-Por cada algoritmos se contrastan los tiempos con una cota subestimada, ajustada y sobrestimada. En el caso del algoritmo de ordenación Shell las cotas son
+Por cada algoritmos se contrastan los tiempos con una cota subestimada, ajustada y 
+sobrestimada. En el caso del algoritmo de ordenación Shell las cotas son
 distintas para cada sucesión de incrementos.
-Cuando se detecta una medición inferior a la confianza establecida, en este caso de 500 microsegundos, se resalta con el simbolo (*) y se obtiene ese tiempo mediante bucles de 1000 ejecuciones. Por otro lado, se han tradato de impedir y documentar las mediciones anómalas.
+Cuando se detecta una medición inferior a la confianza establecida, en este caso de 
+500 microsegundos, se resalta con el simbolo (*) y se obtiene ese tiempo mediante 
+bucles de 1000 ejecuciones. Por otro lado, se han tradato de impedir y documentar 
+las mediciones anómalas.
 
 Los algoritmos fueron ejecutados en un portátil con las siguientes especificaciones:
 
@@ -26,3 +32,34 @@ Los algoritmos fueron ejecutados en un portátil con las siguientes especificaci
 (*Tablas de algoritmos)
 
 (*Conclusión con datos)
+
+Insercion:
+Para las tres tablas de inserción las cotas son: la subestimada n^1.8; la ajustada 
+n^2, con una constante  """"", y la sobreestimada n^2.2.
+Insercion: Ascendente
+Los tiempos de ejecución son realmente bajos ya que basicamente recorre el vector
+comprobando que los elementos estén ordenados de menor a mayor.
+Insercion: Descendente
+Los tiempos de ejecución ya son mucho mayores ya que es el peor caso posible para
+este algoritmo.
+Insercion: Desordenado
+Los tiempos de ejecución se pueden observar que son prácticamente la mitad que los
+obtenidos para cuando el vector está ordenado de mayor a menor.
+
+Shell: Hibbard
+La cota subestimada es n * log(n), la ajustada n^1.18 y la sobrestimada n^1.3.
+La cota ajustada tiende a una constante """""
+
+Shell: Knuth
+La cota subestimada es n^1.1, la ajustada n^1.163 y la sobrestimada n^1.3.
+La cota ajustada tiende a una constante """""
+
+Shell: Sedgewick
+La cota subestimada es n^1.1 la ajustada n^1.118 y la sobrestimada n^1.3.
+La cota ajustada tiende a una constante """""
+
+
+Shell:
+Viendo los tiempos obtenidos podemos asegurar que la secuencia de incrementos más
+eficaz, teniendo en cuenta la cantidad de elementos empleados en las tablas, es la
+de Sedgewick y la menos eficaz la de Ciura.

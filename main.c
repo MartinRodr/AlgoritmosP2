@@ -31,11 +31,15 @@ void aleatorio(int v[], int n) {
 }
 
 void inicializar_ascendente(int v[], int n) {
-	for (int i = 0; i < n; i++) v[i] = i;
+	for (int i = 0; i < n; i++) {
+		v[i] = i;
+	}
 }
 
 void inicializar_descendente(int v[], int n) {
-	for (int i = 0; i < n; i++) v[i] = n - i;
+	for (int i = 0; i < n; i++) {
+		v[i] = n - i;
+	}
 }
 
 bool ordenado(int v[], int n){
@@ -130,9 +134,10 @@ int *ciura(int n, int *m) {
 }
 
 void ord_ins(int v[], int n) {
+	int x, j;
 	for (int i = 1; i < n; i++){
-		int x = v[i];
-		int j = i - 1;
+		x = v[i];
+		j = i - 1;
 		while (j >= 0 && v[j] >= x){
 			v[j + 1] = v[j];
 			j--;
@@ -143,11 +148,12 @@ void ord_ins(int v[], int n) {
 
 void ord_shell(int v[], int n, int incr[], int m){
 	// incr es el vector de incrementos y el ultimo debe ser 1
+	int h, x, j;
 	for (int k = 0; k < m; k++){
-		int h = incr[k];
+		h = incr[k];
 		for (int i = h; i < n; i++) {
-			int x = v[i];
-			int j = i;
+			x = v[i];
+			j = i;
 			while (j >= h && v[j - h] > x){
 				v[j] = v[j - h];
 				j -= h;
@@ -327,7 +333,7 @@ void contarTiempoShellHibb(int n, int k, int m, int exp, double confianza){
 	double ta, tb, t, t1, t2, cte;
 	printf("Algoritmo Shell: Hibbard\n");
 	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / n^1.2", "t (n) / n^1.3", "t (n) / n*log(n)");
+		"n", "t (n)", "t (n) / n*log(n)", "t (n) / n^1.18", "t (n) / n^1.3");
 	for (int i = 0; i < m; i++) {
 		conf = 0;
 		v = malloc(n * sizeof(int));
@@ -366,10 +372,10 @@ void contarTiempoShellHibb(int n, int k, int m, int exp, double confianza){
 			printf("%10d", n);
 		}
 		printf("%18lf", t);
-		printf("%18.7lf", t / pow((double)n, 1.2));
-				cte += t / pow((double)n, 1.2);
-		printf("%18lf", t / pow((double)n, 1.3));
 		printf("%18lf", t / ((double)n * log(n)));
+		printf("%18.7lf", t / pow((double)n, 1.18));
+		cte += t / pow((double)n, 1.18);
+		printf("%18lf", t / pow((double)n, 1.3));
 		printf("\n");
 		free(v);
 		n *=exp;
@@ -383,7 +389,7 @@ void contarTiempoShellKnuth(int n, int k, int m, int exp, double confianza){
 	double ta, tb, t, t1, t2, cte;
 	printf("Algoritmo Shell: Knuth\n");
 	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / n^1.1", "t (n) / n^1.163", "t (n) / n^1.2");
+		"n", "t (n)", "t (n) / n^1.1", "t (n) / n^1.163", "t (n) / n^1.3");
 	for (int i = 0; i < m; i++) {
 		conf = 0;
 		v = malloc(n * sizeof(int));
@@ -423,9 +429,9 @@ void contarTiempoShellKnuth(int n, int k, int m, int exp, double confianza){
 		}
 		printf("%18lf", t);
 		printf("%18.7lf", t / pow((double)n, 1.1));
-		cte += t / pow((double)n, 1.1635);
 		printf("%18lf", t / pow((double)n, 1.163));
-		printf("%18lf", t / pow((double)n, 1.2));
+		cte += t / pow((double)n, 1.1635);
+		printf("%18lf", t / pow((double)n, 1.3));
 		printf("\n");
 		free(v);
 		n *=exp;
@@ -534,10 +540,11 @@ void contarTiempoShellCiura(int n, int k, int m, int exp, double confianza){
 			printf("%10d", n);
 		}
 		printf("%18lf", t);
-		printf("%18lf", t / ((double)n * pow(log(n), 2)));
-		printf("%18lf", t / pow((double)n, 1.21));
+		printf("%18lf", t / ((double)n * pow(log(n), 1.5)));
+		printf("%18lf", t / pow((double)n, 1));
+		//printf("%18lf", t / pow((double)n, 1.21));
 		cte += t / pow((double)n, 1.2124);
-		printf("%18.7lf", t / pow((double)n, 4/3));
+		printf("%18.7lf", t / pow((double)n, 1.1));
 		printf("\n");
 		free(v);
 		n *=exp;
@@ -657,17 +664,17 @@ void test_shell_ciura(){
 }
 
 int main(void){
-	int k = 1000, n = 500, m1 = 11, exp = 2; //m2 = 10;
+	int k = 1000, n = 500, m = 11, exp = 2;
 	double confianza = 500.00;
 	inicializar_semilla();
-	//contarTiempoInsAscend(n, k, m1, exp, confianza);
-	//contarTiempoInsDescend(n, k, m1, exp, confianza);
-	//contarTiempoInsDesord(n, k, m1, exp, confianza);
+	//contarTiempoInsAscend(n, k, m, exp, confianza);
+	//contarTiempoInsDescend(n, k, m, exp, confianza);
+	//contarTiempoInsDesord(n, k, m, exp, confianza);
 
-	//contarTiempoShellHibb(n, k, 10, exp, confianza);
-	contarTiempoShellKnuth(n, k, m1, exp, confianza);
-	//contarTiempoShellSedg(n, k, m1, exp, confianza);
-	contarTiempoShellCiura(n, k, m1, exp, confianza);
+	contarTiempoShellHibb(n, k, m, exp, confianza);
+	contarTiempoShellKnuth(n, k, m, exp, confianza);
+	contarTiempoShellSedg(n, k, m, exp, confianza);
+	contarTiempoShellCiura(n, k, m, exp, confianza);
 
 	/*test_ins();
 	test_shell_hibbard();
