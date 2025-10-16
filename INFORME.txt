@@ -1,0 +1,16 @@
+ALGORITMOS PRACTICA 2
+
+Ali Abu-afash Nayef
+Martín Rodríguez Arévalo
+Alejandro Patiño Jaramillo
+
+Buscamos ordenar de menor a mayor un vector de n números enteros implementendo correctamente los algoritmos ordenación por inserción y ordenación Shell y determinar los tiempos de ejecución ambos algoritmos con vectores de diferentes tamaños y calcular empíricamente las complejidades temporales para cada situación. 
+
+Los algoritmos fueron ejecutados en un portátil con las siguientes especificaciones:
+
+(*especificaciones a inertar*)
+
+
+(*Tablas de algoritmos)
+
+(*Conclusión con datos)
