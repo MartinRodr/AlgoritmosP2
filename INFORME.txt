@@ -8,7 +8,6 @@ Buscamos ordenar de menor a mayor un vector de n números enteros implementendo 
 
 Los algoritmos fueron ejecutados en un portátil con las siguientes especificaciones:
 
-(*especificaciones a inertar*)
     Kernel: x86_64 6.14.0-29-generic #29~24.04.1-Ubuntu 
     CPU: AMD Ryzen 7 7735HS @ 16x 8
     GPU: NVIDIA GeForce RTX 4060 Laptop GPU
