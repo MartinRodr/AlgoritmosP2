@@ -157,36 +157,6 @@ void ord_shell(int v[], int n, int incr[], int m){
 	}
 }
 
-void test_ins(){
-	int n = 15;
-	int v[n];
-	aleatorio(v, n);
-	ord_ins(v, n);
-	for (int i = 0; i < n; i++){
-		printf("%d  ", v[i]);
-	}
-	printf("\n");
-}
-
-void test_shell(){
-	int n = 15, m;
-	int v[n], *incr;
-	aleatorio(v, n);
-	if (!ordenado(v, n)){
-		incr = ciura(n, &m);
-		ord_shell(v, n, incr, m);
-	}
-	for (int i = 0; i < n; i++){
-			printf("%d  ", v[i]);
-	}
-	printf("\n ciura: ");
-	for (int i = 0; i < m; i++){
-		printf("%d  ", incr[i]);		
-	}
-	printf("\n");
-	free(incr);
-}
-
 void contarTiempoInsAscend(int n, int k, int m, int exp, double confianza){
 	int conf, *v;
 	double ta, tb, t, t1, t2, cte;
@@ -357,7 +327,7 @@ void contarTiempoShellHibb(int n, int k, int m, int exp, double confianza){
 	double ta, tb, t, t1, t2, cte;
 	printf("Algoritmo Shell: Hibbard\n");
 	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / n^1.2", "t (n) / n*log(n)", "t (n) / n^1.5");
+		"n", "t (n)", "t (n) / n^1.2", "t (n) / n^1.3", "t (n) / n*log(n)");
 	for (int i = 0; i < m; i++) {
 		conf = 0;
 		v = malloc(n * sizeof(int));
@@ -396,10 +366,10 @@ void contarTiempoShellHibb(int n, int k, int m, int exp, double confianza){
 			printf("%10d", n);
 		}
 		printf("%18lf", t);
-		printf("%18lf", t / pow((double)n, 1.2));
+		printf("%18.7lf", t / pow((double)n, 1.2));
+				cte += t / pow((double)n, 1.2);
+		printf("%18lf", t / pow((double)n, 1.3));
 		printf("%18lf", t / ((double)n * log(n)));
-		cte += t / pow((double)n, 1.5);
-		printf("%18.7lf", t / pow((double)n, 1.5));
 		printf("\n");
 		free(v);
 		n *=exp;
@@ -413,7 +383,7 @@ void contarTiempoShellKnuth(int n, int k, int m, int exp, double confianza){
 	double ta, tb, t, t1, t2, cte;
 	printf("Algoritmo Shell: Knuth\n");
 	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / n^1.52", "t (n) / n*log(n)", "t (n) / n^1.6");
+		"n", "t (n)", "t (n) / n^1.1", "t (n) / n^1.163", "t (n) / n^1.2");
 	for (int i = 0; i < m; i++) {
 		conf = 0;
 		v = malloc(n * sizeof(int));
@@ -452,15 +422,15 @@ void contarTiempoShellKnuth(int n, int k, int m, int exp, double confianza){
 			printf("%10d", n);
 		}
 		printf("%18lf", t);
-		printf("%18lf", t / pow((double)n, 1.52));
-		printf("%18lf", t / ((double)n * log(n)));
-		cte += t / pow((double)n, 1.5);
-		printf("%18.7lf", t / pow((double)n, 1.6));
+		printf("%18.7lf", t / pow((double)n, 1.1));
+		cte += t / pow((double)n, 1.1635);
+		printf("%18lf", t / pow((double)n, 1.163));
+		printf("%18lf", t / pow((double)n, 1.2));
 		printf("\n");
 		free(v);
 		n *=exp;
 	}
-	cte /= (double)m;
+	cte /= (double)m * 10;
 	printf("Cte = %lf\n\n", cte);
 }
 
@@ -469,7 +439,7 @@ void contarTiempoShellSedg(int n, int k, int m, int exp, double confianza){
 	double ta, tb, t, t1, t2, cte;
 	printf("Algoritmo Shell: Sedgewick\n");
 	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / n^4/3", "t (n) / 1.35", "t (n) / n^1.4");
+		"n", "t (n)", "t (n) / n^1.1", "t (n) / n^1.118", "t (n) / n^1.3");
 	for (int i = 0; i < m; i++) {
 		conf = 0;
 		v = malloc(n * sizeof(int));
@@ -508,10 +478,10 @@ void contarTiempoShellSedg(int n, int k, int m, int exp, double confianza){
 			printf("%10d", n);
 		}
 		printf("%18lf", t);
-		printf("%18lf", t / (pow((double)n, 4/3)));
-		printf("%18lf", t / (pow((double)n, 1.35)));
-		cte += t / (pow((double)n, 4/3));
-		printf("%18.7lf", t / pow((double)n, 1.4));
+		printf("%18lf", t / (pow((double)n, 1)));
+		printf("%18lf", t / pow((double)n, 1.118));
+		cte += t / (pow((double)n, 1.118));
+		printf("%18.7lf", t / pow((double)n, 1.3));
 		printf("\n");
 		free(v);
 		n *=exp;
@@ -525,7 +495,7 @@ void contarTiempoShellCiura(int n, int k, int m, int exp, double confianza){
 	double ta, tb, t, t1, t2, cte;
 	printf("Algoritmo Shell: Ciura\n");
 	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / n^1.28", "t (n) / n*log(n)", "t (n) / n^1.32");
+		"n", "t (n)", "t (n) / log", "t (n) / n^1.21", "t (n) / n^4/3");
 	for (int i = 0; i < m; i++) {
 		conf = 0;
 		v = malloc(n * sizeof(int));
@@ -564,10 +534,10 @@ void contarTiempoShellCiura(int n, int k, int m, int exp, double confianza){
 			printf("%10d", n);
 		}
 		printf("%18lf", t);
-		printf("%18lf", t / pow((double)n, 1.28));
-		printf("%18lf", t / ((double)n * log(n)));
-		cte += t / pow((double)n, 1.25);
-		printf("%18.7lf", t / pow((double)n, 1.32));
+		printf("%18lf", t / ((double)n * pow(log(n), 2)));
+		printf("%18lf", t / pow((double)n, 1.21));
+		cte += t / pow((double)n, 1.2124);
+		printf("%18.7lf", t / pow((double)n, 4/3));
 		printf("\n");
 		free(v);
 		n *=exp;
@@ -576,56 +546,56 @@ void contarTiempoShellCiura(int n, int k, int m, int exp, double confianza){
 	printf("Cte = %lf\n\n", cte);
 }
 
-void p1(){
+void test_ins(){
+	int n = 15;
+	int v[n];
+	aleatorio(v, n);
+	for (int i = 0; i < n; i++){
+		printf("%d  ", v[i]);
+	}
+	printf("\n");
+	ord_ins(v, n);
+	for (int i = 0; i < n; i++){
+		printf("%d  ", v[i]);
+	}
+	printf("\n\n");
+}
+
+void test_shell_hibbard(){
 	int n = 15, m;
 	int v[n], *incr;
 	aleatorio(v, n);
+	for (int i = 0; i < n; i++){
+		printf("%d  ", v[i]);
+	}
 	if (!ordenado(v, n)){
 		incr = hibbard(n, &m);
 		ord_shell(v, n, incr, m);
 	}
+	printf("\n");
 	for (int i = 0; i < n; i++){
 		printf("%d  ", v[i]);
-
 	}
 	printf("\n hibbard: ");
 	for (int i = 0; i < m; i++){
 		printf("%d  ", incr[i]);
-	
 	}
-	printf("\n");
+	printf("\n\n");
 	free(incr);
 }
 
-void p2(){
+void test_shell_knuth(){
 	int n = 15, m;
 	int v[n], *incr;
 	aleatorio(v, n);
-	if (!ordenado(v, n)){
-		incr = sedgewick(n, &m);
-		ord_shell(v, n, incr, m);
-	}
 	for (int i = 0; i < n; i++){
 		printf("%d  ", v[i]);
-
 	}
-	printf("\n sedgewick: ");
-	for (int i = 0; i < m; i++){
-		printf("%d  ", incr[i]);
-	
-	}
-	printf("\n");
-	free(incr);
-}
-
-void p3(){
-	int n = 15, m;
-	int v[n], *incr;
-	aleatorio(v, n);
 	if (!ordenado(v, n)){
 		incr = knuth(n, &m);
 		ord_shell(v, n, incr, m);
 	}
+	printf("\n");
 	for (int i = 0; i < n; i++){
 		printf("%d  ", v[i]);
 
@@ -635,29 +605,74 @@ void p3(){
 		printf("%d  ", incr[i]);
 	
 	}
+	printf("\n\n");
+	free(incr);
+}
+
+void test_shell_sedgewick(){
+	int n = 15, m;
+	int v[n], *incr;
+	aleatorio(v, n);
+	for (int i = 0; i < n; i++){
+		printf("%d  ", v[i]);
+	}
+	if (!ordenado(v, n)){
+		incr = sedgewick(n, &m);
+		ord_shell(v, n, incr, m);
+	}
 	printf("\n");
+	for (int i = 0; i < n; i++){
+		printf("%d  ", v[i]);
+	}
+	printf("\n sedgewick: ");
+	for (int i = 0; i < m; i++){
+		printf("%d  ", incr[i]);
+	
+	}
+	printf("\n\n");
+	free(incr);
+}
+
+void test_shell_ciura(){
+	int n = 15, m;
+	int v[n], *incr;
+	aleatorio(v, n);
+	for (int i = 0; i < n; i++){
+		printf("%d  ", v[i]);
+	}
+	if (!ordenado(v, n)){
+		incr = ciura(n, &m);
+		ord_shell(v, n, incr, m);
+	}
+	printf("\n");
+	for (int i = 0; i < n; i++){
+		printf("%d  ", v[i]);
+	}
+	printf("\n ciura: ");
+	for (int i = 0; i < m; i++){
+		printf("%d  ", incr[i]);		
+	}
+	printf("\n\n");
 	free(incr);
 }
 
 int main(void){
-	int k = 1000, n = 500, m1 = 7, exp = 2; //m2 = 10;
+	int k = 1000, n = 500, m1 = 11, exp = 2; //m2 = 10;
 	double confianza = 500.00;
 	inicializar_semilla();
-	contarTiempoInsAscend(n, k, m1, exp, confianza);
-	contarTiempoInsDescend(n, k, m1, exp, confianza);
-	contarTiempoInsDesord(n, k, m1, exp, confianza);
+	//contarTiempoInsAscend(n, k, m1, exp, confianza);
+	//contarTiempoInsDescend(n, k, m1, exp, confianza);
+	//contarTiempoInsDesord(n, k, m1, exp, confianza);
 
-	contarTiempoShellHibb(n, k, 10, exp, confianza);
+	//contarTiempoShellHibb(n, k, 10, exp, confianza);
 	contarTiempoShellKnuth(n, k, m1, exp, confianza);
-	contarTiempoShellSedg(n, k, m1, exp, confianza);
+	//contarTiempoShellSedg(n, k, m1, exp, confianza);
 	contarTiempoShellCiura(n, k, m1, exp, confianza);
 
-
-
-	test_ins();
-	test_shell();
-	p1();
-	p2();
-	p3();
+	/*test_ins();
+	test_shell_hibbard();
+	test_shell_knuth();
+	test_shell_sedgewick();
+	test_shell_ciura();*/
 	return 0;
 }
