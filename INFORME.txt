@@ -7,27 +7,27 @@ Alejandro Patiño Jaramillo
 Buscamos ordenar de menor a mayor un vector de n números enteros implementendo
 los algoritmos de ordenación por inserción y ordenación Shell y a su vez determinar 
 los tiempos de ejecución de ambos algoritmos.
-Las tablas presentan al menos cinco valores de progresión geométrica de 2^ y
-sus respectivos tiempos de ejecución en microsegundos con al menos tres cifras
-significativas.
+Las tablas presentan al menos cinco valores de progresión geométrica de 2^,
+sus respectivos tiempos de ejecución en microsegundos con sus respectivas cotas con 
+al menos tres cifras significativas.
 Para el algoritmo de ordenación por inserción se ha ejecutado con un vector ordenado 
 ascendentemente, otro descendentamente y otro totalmente desordenado.
 Después para el de ordenación Shell se ha ejecutado utilizando la secuencia de
 incrementos de Hibbard, Knuth, Sedgewick y Ciura.
 Por cada algoritmos se contrastan los tiempos con una cota subestimada, ajustada y 
-sobrestimada. En el caso del algoritmo de ordenación Shell las cotas son
-distintas para cada sucesión de incrementos.
+sobrestimada. En el caso del algoritmo de ordenación Shell las cotas son distintas 
+para cada sucesión de incrementos.
 Cuando se detecta una medición inferior a la confianza establecida, en este caso de 
 500 microsegundos, se resalta con el simbolo (*) y se obtiene ese tiempo mediante 
 bucles de 1000 ejecuciones. Por otro lado, se han tradato de impedir y documentar 
 las mediciones anómalas.
 
 Los algoritmos fueron ejecutados en un portátil con las siguientes especificaciones:
-
     Kernel: x86_64 6.14.0-29-generic #29~24.04.1-Ubuntu 
     CPU: AMD Ryzen 7 7735HS @ 16x 8
     GPU: NVIDIA GeForce RTX 4060 Laptop GPU
     RAM: 15592 MB
+
 
 Algoritmo Insercion: Vector Ascendente
          n             t (n)     t (n) / n^1.8       t (n) / n^2     t (n) / n^2.2
@@ -60,9 +60,9 @@ Algoritmo Insercion: Vector Descendente
     128000   10375986.000000          0.006654          0.000633         0.0000603
     256000   42805135.000000          0.007882          0.000653         0.0000541
     512000  168183354.000000          0.008894          0.000642         0.0000463
-Cte = 0.001709
+
 - n^1.8 es una cota subestimada
-- n^2 es una cota ajustada con una constante C = 0.001709
+- n^2 es una cota ajustada con una constante C = 0.000640
 - n^2.2 es una cota sobrestimada
 
 Algoritmo Insercion: Vector Desordenado
@@ -78,10 +78,12 @@ Algoritmo Insercion: Vector Desordenado
     128000    5295748.000000          0.003396          0.000323         0.0000308
     256000   21070475.000000          0.003880          0.000322         0.0000266
     512000   83812830.000000          0.004432          0.000320         0.0000231
-Cte = 0.000484
+
 - n^1.8 es una cota subestimada
-- n^2 es una cota ajustada con una constante C = 0.000484
+- n^2 es una cota ajustada con una constante C = 0.000320
 - n^2.2 es una cota sobrestimada
+
+
 
 Algoritmo Shell: Hibbard
          n             t (n)  t (n) / n*log(n)    t (n) / n^1.18     t (n) / n^1.3
@@ -96,7 +98,7 @@ Algoritmo Shell: Hibbard
     128000      21381.000000          0.014204         0.0201150          0.004905
     256000      46619.000000          0.014624         0.0193571          0.004344
     512000     103190.000000          0.015331         0.0189103          0.003905
-Cte = 0.020947
+
 - n*log(n) es una cota subestimada
 - n^1.18 es una cota ajustada con una constante C = 0.020947
 - n^1.3 es una cota sobrestimada
@@ -155,39 +157,15 @@ Algoritmo Shell: Ciura
 - n^1.11 es una cota ajustada con una constante C = 0.036429
 - n*log^2(n) es una cota sobrestimada
 
-(*Conclusión con datos)
-
-Insercion:
-Para las tres tablas de inserción las cotas son: la subestimada n^1.8; la ajustada 
-n^2, con una constante  """"", y la sobreestimada n^2.2.
-Insercion: Ascendente
-Los tiempos de ejecución son realmente bajos ya que basicamente recorre el vector
-comprobando que los elementos estén ordenados de menor a mayor.
-Insercion: Descendente
-Los tiempos de ejecución ya son mucho mayores ya que es el peor caso posible para
-este algoritmo.
-Insercion: Desordenado
-Los tiempos de ejecución se pueden observar que son prácticamente la mitad que los
-obtenidos para cuando el vector está ordenado de mayor a menor.
-
-Shell: Hibbard
-La cota subestimada es n * log(n), la ajustada n^1.18 y la sobrestimada n^1.3.
-La cota ajustada tiende a una constante """""
-
-Shell: Knuth
-La cota subestimada es n^1.1, la ajustada n^1.163 y la sobrestimada n^1.3.
-La cota ajustada tiende a una constante """""
-
-Shell: Sedgewick
-La cota subestimada es n^1.1, la ajustada n^1.118 y la sobrestimada n^1.3.
-La cota ajustada tiende a una constante """""
-
-Shell: Ciura
-La cota subestimada es n, la ajustada n^1.1072 y la sobrestimada n*log(n).
-La cota ajustada tiende a una constante """""
 
 
-Shell:
-Viendo los tiempos obtenidos podemos asegurar que la secuencia de incrementos más
-eficaz, teniendo en cuenta la cantidad de elementos empleados en las tablas, es la
-de Sedgewick y la menos eficaz la de Hibbard.
+Para las ordenaciones por inserción cuando el vector está totalmente ordenado se 
+puede observar que los tiempos de ejecucción son realmente bajos, ya que unicamente 
+comprueba que el vector esté ordenado, y sería el mejor caso posible. Después, para cuando el vector está ordenado de mayor a menor, se obtienen unos tiempos ya mucho más 
+grandes debido a que es el peor caso posible para este algoritmo. Y por último, cuando el vector está desordenado, es decir, el caso promedio, los tiempos son aproximadamente la mitad que cuando el vector está ordenado descendentemente.
+
+Para las ordenaciones Shell se obtuvieron cotas más ajustadas, pero se aproximaron a
+dos decimales, que eran 1.163 para Knuth, 1.118 para Sedgewick y 1.1072 para Ciura.
+Viendo los tiempos obtenidos con ordenaciones Shell podemos asegurar que la secuencia 
+de incrementos más eficaz, teniendo en cuenta los resultados obtenidos en las tablas, 
+es la de Sedgewick y la menos eficaz la de Hibbard.
