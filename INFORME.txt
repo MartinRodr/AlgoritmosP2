@@ -44,7 +44,7 @@ Algoritmo Insercion: Vector Ascendente
     512000       3189.000000     0.00000016864     0.00000001217     0.00000000088
     
 - n^1.8 es una cota subestimada
-- n^2 es una cota ajustada con una constante C = 0.000002
+- n^2 es una cota ajustada con una constante C = 0.00000000609
 - n^2.2 es una cota sobrestimada
 
 Algoritmo Insercion: Vector Descendente
