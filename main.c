@@ -665,10 +665,10 @@ int main(void){
 	contarTiempoShellSedg(n, k, m, exp, confianza);
 	contarTiempoShellCiura(n, k, m, exp, confianza);
 
-	/*test_ins();
+	test_ins();
 	test_shell_hibbard();
 	test_shell_knuth();
 	test_shell_sedgewick();
-	test_shell_ciura();*/
+	test_shell_ciura();
 	return 0;
 }
