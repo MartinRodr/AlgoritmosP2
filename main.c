@@ -124,51 +124,21 @@ int *ciura(int n, int *m) {
 	if (cnt == 0) { *m = 0; return NULL; }
 	incr = malloc(cnt * sizeof(int));
     if (!incr) { perror("malloc"); exit(1); }
+    *m = cnt;
     // Secuencia base de ciura
 	for (int i = 0; i < ciura_long && ciura[i] <= n; i++){
 		incr[cnt - i - 1] = ciura[i];
 	}
 	// Secuencia extendida
-	last = incr[ciura_long - 1];
-    for (int j = ciura_long; j < cnt; j++) {
-        next = (int)round(last * 2.25);
-        if (next >= n) break;
-        incr[cnt - j - 1] = next;
-        last = next;
+	if (cnt > ciura_long) {
+        last = ciura[ciura_long - 1];
     }
-    *m = cnt;
+    for (int j = ciura_long; j < cnt; j++) {
+        last = (int)round(last * 2.25);
+        incr[cnt - j - 1] = last;
+    }
 	return incr;
 }
-
-/*int *ciura(int n, int *m) {
-    int ciura[] = {1, 4, 10, 23, 57, 132, 301, 701, 1750};
-    int ciura_len = sizeof(base) / sizeof(base[0]);
-    int *incr = malloc(100 * sizeof(int)); // capacidad inicial
-    if (!incr) { perror("malloc"); exit(1); }
-    int cnt = 0;
-
-    for (int i = 0; i < ciura_len && ciura[i] < n; i++)
-        incr[cnt++] = ciura[i];
-
-    // 2️⃣ Extender mientras el último sea menor que n
-    int last = incr[cnt - 1];
-    while (last < n) {
-        int next = (int)round(last * 2.25);
-        if (next >= n) break;
-        incr[cnt++] = next;
-        last = next;
-    }
-
-    // 3️⃣ Invertir el orden (Shell sort usa gaps de mayor a menor)
-    for (int i = 0; i < cnt / 2; i++) {
-        int tmp = incr[i];
-        incr[i] = incr[cnt - i - 1];
-        incr[cnt - i - 1] = tmp;
-    }
-
-    *m = cnt;
-    return incr;
-}*/
 
 void ord_ins(int v[], int n) {
 	int x, j;
@@ -379,7 +349,6 @@ void contarTiempoShellHibb(int n, int k, int m, int exp, double confianza){
 			exit(EXIT_FAILURE);
 		}
 		incr = hibbard(n, &mm);
-		printf("\n");	
 		aleatorio(v, n);
 		ta = microsegundos();
 		ord_shell(v, n, incr, mm);
@@ -428,7 +397,7 @@ void contarTiempoShellKnuth(int n, int k, int m, int exp, double confianza){
 	double ta, tb, t, t1, t2, cte;
 	printf("Algoritmo Shell: Knuth\n");
 	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / n^1.1", "t (n) / n^1.163", "t (n) / n^1.3");
+		"n", "t (n)", "t (n) / n^1.1", "t (n) / n^1.16", "t (n) / n^1.3");
 	for (int i = 0; i < m; i++) {
 		conf = 0;
 		v = malloc(n * sizeof(int));
@@ -437,7 +406,6 @@ void contarTiempoShellKnuth(int n, int k, int m, int exp, double confianza){
 			exit(EXIT_FAILURE);
 		}
 		incr = knuth(n, &mm);
-		printf("\n");
 		aleatorio(v, n);
 		ta = microsegundos();
 		ord_shell(v, n, incr, mm);
@@ -469,8 +437,8 @@ void contarTiempoShellKnuth(int n, int k, int m, int exp, double confianza){
 		}
 		printf("%18lf", t);
 		printf("%18.7lf", t / pow((double)n, 1.1));
-		printf("%18lf", t / pow((double)n, 1.163));
-		cte += t / pow((double)n, 1.1635);
+		printf("%18lf", t / pow((double)n, 1.16));
+		cte += t / pow((double)n, 1.16);
 		printf("%18lf", t / pow((double)n, 1.3));
 		printf("\n");
 		free(v);
@@ -486,7 +454,7 @@ void contarTiempoShellSedg(int n, int k, int m, int exp, double confianza){
 	double ta, tb, t, t1, t2, cte;
 	printf("Algoritmo Shell: Sedgewick\n");
 	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / n^1.1", "t (n) / n^1.118", "t (n) / n^1.3");
+		"n", "t (n)", "t (n) / n^1.1", "t (n) / n^1.12", "t (n) / n^1.3");
 	for (int i = 0; i < m; i++) {
 		conf = 0;
 		v = malloc(n * sizeof(int));
@@ -495,7 +463,6 @@ void contarTiempoShellSedg(int n, int k, int m, int exp, double confianza){
 			exit(EXIT_FAILURE);
 		}
 		incr = sedgewick(n, &mm);
-		printf("\n");
 		aleatorio(v, n);
 		ta = microsegundos();
 		ord_shell(v, n, incr, mm);
@@ -527,8 +494,8 @@ void contarTiempoShellSedg(int n, int k, int m, int exp, double confianza){
 		}
 		printf("%18lf", t);
 		printf("%18lf", t / (pow((double)n, 1)));
-		printf("%18lf", t / pow((double)n, 1.118));
-		cte += t / (pow((double)n, 1.118));
+		printf("%18lf", t / pow((double)n, 1.12));
+		cte += t / (pow((double)n, 1.12));
 		printf("%18.7lf", t / pow((double)n, 1.3));
 		printf("\n");
 		free(v);
@@ -544,7 +511,7 @@ void contarTiempoShellCiura(int n, int k, int m, int exp, double confianza){
 	double ta, tb, t, t1, t2, cte;
 	printf("Algoritmo Shell: Ciura\n");
 	printf("%10s%18s%18s%18s%18s\n", 
-		"n", "t (n)", "t (n) / log", "t (n) / n^1.21", "t (n) / n^4/3");
+		"n", "t (n)", "t (n) / n", "t (n) / n^1.11", "t (n) / n*log^2(n)");
 	for (int i = 0; i < m; i++) {
 		conf = 0;
 		v = malloc(n * sizeof(int));
@@ -553,10 +520,6 @@ void contarTiempoShellCiura(int n, int k, int m, int exp, double confianza){
 			exit(EXIT_FAILURE);
 		}
 		incr = ciura(n, &mm);
-		for (int j = 0; j < mm; j++) {
-			printf("%d  ", incr[j]);
-		}
-		printf("\n");
 		aleatorio(v, n);
 		ta = microsegundos();
 		ord_shell(v, n, incr, mm);
@@ -587,11 +550,10 @@ void contarTiempoShellCiura(int n, int k, int m, int exp, double confianza){
 			printf("%10d", n);
 		}
 		printf("%18lf", t);
-		printf("%18lf", t / ((double)n * pow(log(n), 1.5)));
 		printf("%18lf", t / pow((double)n, 1));
-		//printf("%18lf", t / pow((double)n, 1.21));
-		cte += t / pow((double)n, 1.2124);
-		printf("%18.7lf", t / pow((double)n, 1.1));
+		printf("%18.7lf", t / pow((double)n, 1.11));
+		cte += t / pow((double)n, 1.11);
+		printf("%18lf", t / ((double)n * pow(log(n), 2)));
 		printf("\n");
 		free(v);
 		free(incr);
@@ -715,9 +677,9 @@ int main(void){
 	int k = 1000, n = 500, m = 11, exp = 2;
 	double confianza = 500.00;
 	inicializar_semilla();
-	//contarTiempoInsAscend(n, k, m, exp, confianza);
-	//contarTiempoInsDescend(n, k, m, exp, confianza);
-	//contarTiempoInsDesord(n, k, m, exp, confianza);
+	contarTiempoInsAscend(n, k, m, exp, confianza);
+	contarTiempoInsDescend(n, k, m, exp, confianza);
+	contarTiempoInsDesord(n, k, m, exp, confianza);
 
 	contarTiempoShellHibb(n, k, m, exp, confianza);
 	contarTiempoShellKnuth(n, k, m, exp, confianza);
