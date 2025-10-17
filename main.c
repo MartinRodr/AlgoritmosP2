@@ -97,7 +97,7 @@ int *sedgewick(int n, int *m) {
     	incr[i] = (int)(pow(4, cnt - i) + (3 * pow(2, cnt - i - 1)) + 1);
     if (incr[cnt - 1] != 1){
     	incr = realloc(incr, (cnt + 1) * sizeof(int));
-    	if(!incr){
+    	if (!incr){
     		perror("realloc"); exit(1);
     	}
     	incr[cnt] = 1;
@@ -110,28 +110,65 @@ int *ciura(int n, int *m) {
 	int ciura[] = {1, 4, 10, 23, 57, 132, 301, 701, 1750};
 	int ciura_long = sizeof(ciura) / sizeof(ciura[0]); 
 	int last = 1, cnt = 0, next = 0, *incr;
+	// Contar base de ciura
 	while ((cnt < ciura_long && ciura[cnt] <= n)) {
 		last = ciura[cnt++]; }
-	while (last < n){
+	// Contar extendidos
+	next = last;
+	while (next < n){
 		next = (int)round(last * 2.25);
-		if (next > n) break;
+		if (next >= n) break;
 		last = next;
 		cnt++;
 	}
 	if (cnt == 0) { *m = 0; return NULL; }
 	incr = malloc(cnt * sizeof(int));
     if (!incr) { perror("malloc"); exit(1); }
-    *m = cnt;
+    // Secuencia base de ciura
 	for (int i = 0; i < ciura_long && ciura[i] <= n; i++){
 		incr[cnt - i - 1] = ciura[i];
 	}
-	last = (cnt > 0) ? incr[cnt-1] : 1;
+	// Secuencia extendida
+	last = incr[ciura_long - 1];
     for (int j = ciura_long; j < cnt; j++) {
-        last = (int)round(last * 2.25);
-        incr[cnt - j - 1] = last;
+        next = (int)round(last * 2.25);
+        if (next >= n) break;
+        incr[cnt - j - 1] = next;
+        last = next;
     }
-	return incr;	
+    *m = cnt;
+	return incr;
 }
+
+/*int *ciura(int n, int *m) {
+    int ciura[] = {1, 4, 10, 23, 57, 132, 301, 701, 1750};
+    int ciura_len = sizeof(base) / sizeof(base[0]);
+    int *incr = malloc(100 * sizeof(int)); // capacidad inicial
+    if (!incr) { perror("malloc"); exit(1); }
+    int cnt = 0;
+
+    for (int i = 0; i < ciura_len && ciura[i] < n; i++)
+        incr[cnt++] = ciura[i];
+
+    // 2️⃣ Extender mientras el último sea menor que n
+    int last = incr[cnt - 1];
+    while (last < n) {
+        int next = (int)round(last * 2.25);
+        if (next >= n) break;
+        incr[cnt++] = next;
+        last = next;
+    }
+
+    // 3️⃣ Invertir el orden (Shell sort usa gaps de mayor a menor)
+    for (int i = 0; i < cnt / 2; i++) {
+        int tmp = incr[i];
+        incr[i] = incr[cnt - i - 1];
+        incr[cnt - i - 1] = tmp;
+    }
+
+    *m = cnt;
+    return incr;
+}*/
 
 void ord_ins(int v[], int n) {
 	int x, j;
@@ -342,6 +379,7 @@ void contarTiempoShellHibb(int n, int k, int m, int exp, double confianza){
 			exit(EXIT_FAILURE);
 		}
 		incr = hibbard(n, &mm);
+		printf("\n");	
 		aleatorio(v, n);
 		ta = microsegundos();
 		ord_shell(v, n, incr, mm);
@@ -378,6 +416,7 @@ void contarTiempoShellHibb(int n, int k, int m, int exp, double confianza){
 		printf("%18lf", t / pow((double)n, 1.3));
 		printf("\n");
 		free(v);
+		free(incr);
 		n *=exp;
 	}
 	cte /= (double)m;
@@ -398,6 +437,7 @@ void contarTiempoShellKnuth(int n, int k, int m, int exp, double confianza){
 			exit(EXIT_FAILURE);
 		}
 		incr = knuth(n, &mm);
+		printf("\n");
 		aleatorio(v, n);
 		ta = microsegundos();
 		ord_shell(v, n, incr, mm);
@@ -434,6 +474,7 @@ void contarTiempoShellKnuth(int n, int k, int m, int exp, double confianza){
 		printf("%18lf", t / pow((double)n, 1.3));
 		printf("\n");
 		free(v);
+		free(incr);
 		n *=exp;
 	}
 	cte /= (double)m * 10;
@@ -454,6 +495,7 @@ void contarTiempoShellSedg(int n, int k, int m, int exp, double confianza){
 			exit(EXIT_FAILURE);
 		}
 		incr = sedgewick(n, &mm);
+		printf("\n");
 		aleatorio(v, n);
 		ta = microsegundos();
 		ord_shell(v, n, incr, mm);
@@ -490,6 +532,7 @@ void contarTiempoShellSedg(int n, int k, int m, int exp, double confianza){
 		printf("%18.7lf", t / pow((double)n, 1.3));
 		printf("\n");
 		free(v);
+		free(incr);
 		n *=exp;
 	}
 	cte /= (double)m;
@@ -510,6 +553,10 @@ void contarTiempoShellCiura(int n, int k, int m, int exp, double confianza){
 			exit(EXIT_FAILURE);
 		}
 		incr = ciura(n, &mm);
+		for (int j = 0; j < mm; j++) {
+			printf("%d  ", incr[j]);
+		}
+		printf("\n");
 		aleatorio(v, n);
 		ta = microsegundos();
 		ord_shell(v, n, incr, mm);
@@ -547,6 +594,7 @@ void contarTiempoShellCiura(int n, int k, int m, int exp, double confianza){
 		printf("%18.7lf", t / pow((double)n, 1.1));
 		printf("\n");
 		free(v);
+		free(incr);
 		n *=exp;
 	}
 	cte /= (double)m;
