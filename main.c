@@ -172,7 +172,7 @@ void ord_shell(int v[], int n, int incr[], int m){
 
 void contarTiempoInsAscend(int n, int k, int m, int exp, double confianza){
 	int conf, *v;
-	double ta, tb, t, t1, t2, cte;
+	double ta, tb, t, t1, t2;
 	printf("Algoritmo Insercion: Vector Ascendente\n");
 	printf("%10s%18s%18s%18s%18s\n", 
 		"n", "t (n)", "t (n) / n^1.8", "t (n) / n^2", "t (n) / n^2.2");
@@ -213,21 +213,18 @@ void contarTiempoInsAscend(int n, int k, int m, int exp, double confianza){
 			printf("%10d", n);
 		}
 		printf("%18lf", t);
-		printf("%18lf", t / pow((double)n, 1.8));
-		printf("%18lf", t / pow((double)n, 2));
-		cte += t / pow((double)n, 2);
-		printf("%18.7lf", t / pow((double)n, 2.2));
+		printf("%18.11lf", t / pow((double)n, 1.8));
+		printf("%18.11lf", t / pow((double)n, 2));
+		printf("%18.11lf", t / pow((double)n, 2.2));
 		printf("\n");
 		free(v);
 		n *=exp;
 	}
-	cte /= (double)m;
-	printf("Cte = %lf\n\n", cte);
 }
 
 void contarTiempoInsDescend(int n, int k, int m, int exp, double confianza){
 	int conf, *v;
-	double ta, tb, t, t1, t2, cte;
+	double ta, tb, t, t1, t2;
 	printf("Algoritmo Insercion: Vector Descendente\n");
 	printf("%10s%18s%18s%18s%18s\n", 
 		"n", "t (n)", "t (n) / n^1.8", "t (n) / n^2", "t (n) / n^2.2");
@@ -270,19 +267,16 @@ void contarTiempoInsDescend(int n, int k, int m, int exp, double confianza){
 		printf("%18lf", t);
 		printf("%18lf", t / pow((double)n, 1.8));
 		printf("%18lf", t / pow((double)n, 2));
-		cte += t / pow((double)n, 2);
 		printf("%18.7lf", t / pow((double)n, 2.2));
 		printf("\n");
 		free(v);
 		n *=exp;
 	}
-	cte /= (double)m;
-	printf("Cte = %lf\n\n", cte);
 }
 
 void contarTiempoInsDesord(int n, int k, int m, int exp, double confianza){
 	int conf, *v;
-	double ta, tb, t, t1, t2, cte;
+	double ta, tb, t, t1, t2;
 	printf("Algoritmo Insercion: Vector Desordenado\n");
 	printf("%10s%18s%18s%18s%18s\n", 
 		"n", "t (n)", "t (n) / n^1.8", "t (n) / n^2", "t (n) / n^2.2");
@@ -325,19 +319,16 @@ void contarTiempoInsDesord(int n, int k, int m, int exp, double confianza){
 		printf("%18lf", t);
 		printf("%18lf", t / pow((double)n, 1.8));
 		printf("%18lf", t / pow((double)n, 2));
-		cte += t / pow((double)n, 2);
 		printf("%18.7lf", t / pow((double)n, 2.2));
 		printf("\n");
 		free(v);
 		n *=exp;
 	}
-	cte /= (double)m;
-	printf("Cte = %lf\n\n", cte);
 }
 
 void contarTiempoShellHibb(int n, int k, int m, int exp, double confianza){
 	int conf, *v, *incr, mm;
-	double ta, tb, t, t1, t2, cte;
+	double ta, tb, t, t1, t2;
 	printf("Algoritmo Shell: Hibbard\n");
 	printf("%10s%18s%18s%18s%18s\n", 
 		"n", "t (n)", "t (n) / n*log(n)", "t (n) / n^1.18", "t (n) / n^1.3");
@@ -381,20 +372,17 @@ void contarTiempoShellHibb(int n, int k, int m, int exp, double confianza){
 		printf("%18lf", t);
 		printf("%18lf", t / ((double)n * log(n)));
 		printf("%18.7lf", t / pow((double)n, 1.18));
-		cte += t / pow((double)n, 1.18);
 		printf("%18lf", t / pow((double)n, 1.3));
 		printf("\n");
 		free(v);
 		free(incr);
 		n *=exp;
 	}
-	cte /= (double)m;
-	printf("Cte = %lf\n\n", cte);
 }
 
 void contarTiempoShellKnuth(int n, int k, int m, int exp, double confianza){
 	int conf, *v, *incr, mm;
-	double ta, tb, t, t1, t2, cte;
+	double ta, tb, t, t1, t2;
 	printf("Algoritmo Shell: Knuth\n");
 	printf("%10s%18s%18s%18s%18s\n", 
 		"n", "t (n)", "t (n) / n^1.1", "t (n) / n^1.16", "t (n) / n^1.3");
@@ -438,20 +426,17 @@ void contarTiempoShellKnuth(int n, int k, int m, int exp, double confianza){
 		printf("%18lf", t);
 		printf("%18.7lf", t / pow((double)n, 1.1));
 		printf("%18lf", t / pow((double)n, 1.16));
-		cte += t / pow((double)n, 1.16);
 		printf("%18lf", t / pow((double)n, 1.3));
 		printf("\n");
 		free(v);
 		free(incr);
 		n *=exp;
 	}
-	cte /= (double)m * 10;
-	printf("Cte = %lf\n\n", cte);
 }
 
 void contarTiempoShellSedg(int n, int k, int m, int exp, double confianza){
 	int conf, *v, *incr, mm;
-	double ta, tb, t, t1, t2, cte;
+	double ta, tb, t, t1, t2;
 	printf("Algoritmo Shell: Sedgewick\n");
 	printf("%10s%18s%18s%18s%18s\n", 
 		"n", "t (n)", "t (n) / n^1.1", "t (n) / n^1.12", "t (n) / n^1.3");
@@ -495,20 +480,17 @@ void contarTiempoShellSedg(int n, int k, int m, int exp, double confianza){
 		printf("%18lf", t);
 		printf("%18lf", t / (pow((double)n, 1)));
 		printf("%18lf", t / pow((double)n, 1.12));
-		cte += t / (pow((double)n, 1.12));
 		printf("%18.7lf", t / pow((double)n, 1.3));
 		printf("\n");
 		free(v);
 		free(incr);
 		n *=exp;
 	}
-	cte /= (double)m;
-	printf("Cte = %lf\n\n", cte);
 }
 
 void contarTiempoShellCiura(int n, int k, int m, int exp, double confianza){
 	int conf, *v, *incr, mm;
-	double ta, tb, t, t1, t2, cte;
+	double ta, tb, t, t1, t2;
 	printf("Algoritmo Shell: Ciura\n");
 	printf("%10s%18s%18s%18s%18s\n", 
 		"n", "t (n)", "t (n) / n", "t (n) / n^1.11", "t (n) / n*log^2(n)");
@@ -552,15 +534,12 @@ void contarTiempoShellCiura(int n, int k, int m, int exp, double confianza){
 		printf("%18lf", t);
 		printf("%18lf", t / pow((double)n, 1));
 		printf("%18.7lf", t / pow((double)n, 1.11));
-		cte += t / pow((double)n, 1.11);
 		printf("%18lf", t / ((double)n * pow(log(n), 2)));
 		printf("\n");
 		free(v);
 		free(incr);
 		n *=exp;
 	}
-	cte /= (double)m;
-	printf("Cte = %lf\n\n", cte);
 }
 
 void test_ins(){

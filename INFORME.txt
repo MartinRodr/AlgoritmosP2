@@ -114,7 +114,7 @@ Algoritmo Shell: Knuth
     128000      18144.000000         0.0437323          0.021596          0.004163
     256000      42126.000000         0.0473681          0.022438          0.003925
     512000      87884.000000         0.0461013          0.020949          0.003326
-Cte = 0.002405
+
 - n^1.1 es una cota subestimada
 - n^1.16 es una cota ajustada con una constante C = 0.002405
 - n^1.3 es una cota sobrestimada
@@ -132,9 +132,9 @@ Algoritmo Shell: Sedgewick
     128000      15123.000000          0.118148          0.028811         0.0034695
     256000      32359.000000          0.126402          0.028364         0.0030150
     512000      69821.000000          0.136369          0.028158         0.0026420
-Cte = 0.029321
+
 - n^1.1 es una cota subestimada
-- n^1.12 es una cota ajustada con una constante C = 0.029321
+- n^1.12 es una cota ajustada con una constante C = 0.028321
 - n^1.3 es una cota sobrestimada
 
 Algoritmo Shell: Ciura
@@ -150,9 +150,9 @@ Algoritmo Shell: Ciura
     128000      17151.000000          0.133992         0.0367525          0.000969
     256000      37266.000000          0.145570         0.0369970          0.000939
     512000      78540.000000          0.153398         0.0361244          0.000888
-Cte = 0.038429
-- n^1 es una cota subestimada
-- n^1.11 es una cota ajustada con una constante C = 0.038429
+
+- n es una cota subestimada
+- n^1.11 es una cota ajustada con una constante C = 0.036429
 - n*log^2(n) es una cota sobrestimada
 
 (*Conclusión con datos)
